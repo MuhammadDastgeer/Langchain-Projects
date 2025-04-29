@@ -4,31 +4,33 @@ import streamlit as st
 from dotenv import load_dotenv
 import os
 import tempfile
+import json
 
-# LangChain components
+# LangChain modules
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate
+from langchain_core.documents import Document
 from langchain_community.document_loaders import (
     TextLoader, CSVLoader, PyPDFLoader, UnstructuredWordDocumentLoader,
-    UnstructuredMarkdownLoader, JSONLoader
+    UnstructuredMarkdownLoader
 )
 
-# Load environment variables
+# Load environment variables (e.g., API keys)
 load_dotenv()
 
-# Initialize the model and parser
+# Initialize model and parser
 model = ChatGoogleGenerativeAI(model="gemini-1.5-pro")
 parser = StrOutputParser()
 
-# Streamlit UI setup
+# Streamlit page config
 st.set_page_config(page_title="📄 AI File Summarizer", layout="centered")
-st.title("📄 AI File Summarizer with LangChain + Gemini")
+st.title("📄 AI File Summarizer with Gemini")
 
-# File uploader
+# File upload
 uploaded_file = st.file_uploader(
-    "📂 Upload a file (txt, md, csv, json, pdf, docx)",
-    type=["txt", "md", "csv", "json", "pdf", "docx"]
+    "📂 Upload a file (txt, csv, md, json, pdf, docx)",
+    type=["txt", "csv", "md", "json", "pdf", "docx"]
 )
 
 # Prompt input
@@ -38,7 +40,7 @@ custom_prompt = st.text_area(
     height=100
 )
 
-# Function to load file content
+# Function to load and parse file content
 def load_file(path, extension):
     try:
         if extension == ".txt":
@@ -52,7 +54,10 @@ def load_file(path, extension):
         elif extension == ".md":
             return UnstructuredMarkdownLoader(path).load()
         elif extension == ".json":
-            return JSONLoader(path, jq_schema=".text", text_content=False).load()
+            with open(path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                content = json.dumps(data, indent=2)
+                return [Document(page_content=content)]
         else:
             return None
     except Exception as e:
@@ -70,6 +75,7 @@ if uploaded_file is not None:
 
     if docs:
         content = "\n".join([doc.page_content for doc in docs])
+
         with st.expander("📖 Show file content"):
             st.text(content)
 
@@ -79,7 +85,7 @@ if uploaded_file is not None:
         if st.button("✨ Generate Output"):
             with st.spinner("Generating..."):
                 response = chain.invoke({"poem": content})
-                st.success("✅ Result:")
+                st.success("✅ Summary Generated:")
                 st.markdown(f"### 🧠 Output\n{response}")
     else:
-        st.error("Failed to read file content. Please check the format or try another file.")
+        st.error("❌ Failed to read the file. Try another format or fix content.")
