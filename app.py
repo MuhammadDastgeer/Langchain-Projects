@@ -36,7 +36,7 @@ uploaded_file = st.file_uploader(
 # Prompt input
 custom_prompt = st.text_area(
     "✍️ Enter your prompt",
-    value="Write a summary for the following content:\n\n{poem}",
+    value="Write a summary for the following content:{poem}",
     height=100
 )
 
