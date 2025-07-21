@@ -11,7 +11,6 @@ load_dotenv()
 # model = ChatGoogleGenerativeAI(model='Gemini 1.5 Flash')
 model = ChatGroq(
         temperature=0.7,
-        groq_api_key=groq_api_key,
         model_name="deepseek-r1-distill-llama-70b"
     )
 st.header('Reasearch Tool')
