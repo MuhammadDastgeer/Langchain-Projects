@@ -12,7 +12,7 @@ load_dotenv()
 model = ChatGroq(
         temperature=0.7,
         groq_api_key=groq_api_key,
-        model_name="deepseek-r1-distill-llama-70b"
+        model="deepseek-r1-distill-llama-70b"
     )
 st.header('Reasearch Tool')
 
