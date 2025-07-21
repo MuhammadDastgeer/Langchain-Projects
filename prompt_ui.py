@@ -7,7 +7,7 @@ from langchain_core.prompts import PromptTemplate,load_prompt
 
 load_dotenv()
 
-model = ChatGoogleGenerativeAI(model='gemini-1.5-pro')
+model = ChatGoogleGenerativeAI(model='Gemini 1.5 Flash')
 
 st.header('Reasearch Tool')
 
