@@ -9,11 +9,7 @@ from langchain_core.prompts import PromptTemplate,load_prompt
 load_dotenv()
 
 # model = ChatGoogleGenerativeAI(model='Gemini 1.5 Flash')
-model = ChatGroq(
-        temperature=0.7,
-        groq_api_key=groq_api_key,
-        model="deepseek-r1-distill-llama-70b"
-    )
+model = ChatGroq(model="deepseek-r1-distill-llama-70b")
 st.header('Reasearch Tool')
 
 # paper_input = st.selectbox( "Select Research Paper Name", ["Attention Is All You Need", "BERT: Pre-training of Deep Bidirectional Transformers", "GPT-3: Language Models are Few-Shot Learners", "Diffusion Models Beat GANs on Image Synthesis"] )
